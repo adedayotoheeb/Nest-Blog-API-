@@ -14,10 +14,10 @@ export class User {
     @Column()
     lastname:string;
 
-    @Column()
+    @Column({ unique:true})
     email:string;
 
-    @Column()
+    @Column({type:'varchar'})
     @Exclude()
     password:string;
 

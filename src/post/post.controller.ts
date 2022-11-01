@@ -5,6 +5,8 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Exclude } from "class-transformer";
 import { User } from 'src/auth/entities/user.entity';
 import { Request } from 'express';
+import { SerializeInterceptors } from './interceptors/serialize.interceptor';
+import { PostDto } from './dto/post.dto';
 
 @Controller('post')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -17,7 +19,7 @@ export class PostController {
   }
 
   @Get()
-  @UseInterceptors(ClassSerializerInterceptor)
+  // @UseInterceptors( new SerializeInterceptors(PostDto))
   findAll() {
     return this.postService.findAll();
   }

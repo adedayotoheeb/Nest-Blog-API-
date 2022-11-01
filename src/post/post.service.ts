@@ -29,7 +29,7 @@ export class PostService {
   }
 
   async update(id: number, updatePostDto: UpdatePostDto) {
-    let post = await this.postRepo.findOneById(id)
+    let post = await this.findOne(id)
     if (post === null){
       throw new NotFoundException('No post with the given id exists')
     }

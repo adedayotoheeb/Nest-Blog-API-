@@ -4,6 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, OneToOne,
 import slugify from 'slugify'
 import { Exclude } from "class-transformer";
 
+
 @Entity('posts')
 export class Post {
     @PrimaryGeneratedColumn()
@@ -34,7 +35,7 @@ export class Post {
         name:'categoryId',
         referencedColumnName:'id'
     })
-    category: Category
+    category: Category;
 
     @ManyToOne(type => User, (user) => user.posts, { eager:true})
     @JoinColumn({
