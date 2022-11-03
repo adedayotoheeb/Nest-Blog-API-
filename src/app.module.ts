@@ -3,23 +3,19 @@ import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoryModule } from './category/category.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { typeOrmConfigAsync } from './config/typeorm.config';
 
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal:true,
+    }),
     PostModule,
     AuthModule,
     CategoryModule,
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port:3306,
-      database:'blog',
-      username:'root',
-      password:'adedayo', 
-      autoLoadEntities:true,
-      synchronize:true,
-    }),
+    TypeOrmModule.forRootAsync(typeOrmConfigAsync),
   ],
   // controllers: [AppController],
   // providers: [AppService],
