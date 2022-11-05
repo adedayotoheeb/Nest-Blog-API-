@@ -11,13 +11,18 @@ export class PostService {
 
   constructor(@InjectRepository(Post) private readonly postRepo: Repository<Post>){}
   
-  async create(createPostDto: CreatePostDto) {  
+  async create(createPostDto: CreatePostDto, user: User) {  
     let post =  await this.postRepo.create(createPostDto)
     return this.postRepo.save(post)
   }
 
-  async findAll():Promise<Post[]> {
-    return await this.postRepo.find()
+  async findAll(query?:string){
+    const myQuery = this.postRepo.createQueryBuilder('post')
+                                  .leftJoinAndSelect('post.category','category')
+                                  .leftJoinAndSelect('post.user', 'user')
+
+    return myQuery
+    
   }
 
   async findOne(id: number):Promise<Post>{

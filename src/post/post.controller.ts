@@ -4,9 +4,9 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Exclude } from "class-transformer";
 import { User } from 'src/auth/entities/user.entity';
-import { Request } from 'express';
 import { SerializeInterceptors } from './interceptors/serialize.interceptor';
 import { PostDto } from './dto/post.dto';
+import { Request } from 'express';
 
 @Controller('post')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -14,8 +14,8 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  create(@Body() createPostDto: CreatePostDto, @Req() req: Request  ) {
+    return this.postService.create(createPostDto, req.user as UserAccount);
   }
 
   @Get()
