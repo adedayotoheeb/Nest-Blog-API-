@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { User } from 'src/auth/entities/user.entity';
+import { SortEnum } from './dto/sort.enum';
+import { PostFilter } from './dto/post.filter';
 
 @Injectable()
 export class PostService {
@@ -16,12 +18,32 @@ export class PostService {
     return this.postRepo.save(post)
   }
 
-  async findAll(query?:string){
+  async findAll(query?:PostFilter){
+    
     const myQuery = this.postRepo.createQueryBuilder('post')
-                                  .leftJoinAndSelect('post.category','category')
-                                  .leftJoinAndSelect('post.user', 'user')
+                                 .leftJoinAndSelect('post.category','category')
+                                 .leftJoinAndSelect('post.user', 'user')
+    
+    if (!(Object.keys(query).length === 0) && query.constructor === Object ) {
+      const queryKeys = Object.keys(query)
 
-    return myQuery
+      if(queryKeys.includes('title')){
+        myQuery.where('post.title LIKE :title', {title:`%${query.title}%`})
+      }
+
+      // if(queryKeys.includes('sort')){
+      //   myQuery.orderBy('post.title', query.sort.)
+      // }
+
+      if(queryKeys.includes('category')){
+        myQuery.andWhere('category.title = :cat', {cat: query.category})
+      }
+         
+      return await myQuery.getMany()
+
+    } else{
+      return await myQuery.getMany()
+    }
     
   }
 
@@ -38,6 +60,7 @@ export class PostService {
     if (post === null){
       throw new NotFoundException('No post with the given id exists')
     }
+    post.modifiedOn = new Date(Date.now())
     return await this.postRepo.update(id, updatePostDto)
   }
 

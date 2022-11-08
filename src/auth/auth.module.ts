@@ -11,12 +11,15 @@ import { JwtStrategy } from './jwt.strategy';
 @Module({
   imports:[TypeOrmModule.forFeature([User]),
   PassportModule.register({ defaultStrategy: 'jwt'}),
-  JwtModule.register({
-    secret:process.env.JWT_SECRET,
-    signOptions:{
-      expiresIn:process.env.EXPIRING_PERIOD,
+  JwtModule.registerAsync({
+    useFactory: () => ({
+      secret:process.env.JWT_SECRET,
+      signOptions:{
+        algorithms:process.env.ALGORITHM_TYPE,
+        expiresIn:process.env.EXPIRING_PERIOD,
+    },
     }
-  })
+  )})
 ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy]

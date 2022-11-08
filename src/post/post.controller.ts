@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Req } from '@nestjs/common';
+import { Controller, Query , Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Req } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -7,6 +7,9 @@ import { User } from 'src/auth/entities/user.entity';
 import { SerializeInterceptors } from './interceptors/serialize.interceptor';
 import { PostDto } from './dto/post.dto';
 import { Request } from 'express';
+import {  SortEnum } from './dto/sort.enum';
+import { PostFilter } from './dto/post.filter';
+
 
 @Controller('post')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -15,13 +18,13 @@ export class PostController {
 
   @Post()
   create(@Body() createPostDto: CreatePostDto, @Req() req: Request  ) {
-    return this.postService.create(createPostDto, req.user as UserAccount);
+    return this.postService.create(createPostDto, req.user as User);
   }
 
   @Get()
   // @UseInterceptors( new SerializeInterceptors(PostDto))
-  findAll() {
-    return this.postService.findAll();
+  findAll(@Query()query:PostFilter) {
+    return this.postService.findAll(query);
   }
 
   @Get(':id')

@@ -7,6 +7,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register.dto';
 import { User } from './entities/user.entity';
 import {UnauthorizedException, InternalServerErrorException} from '@nestjs/common'
+import { AuthPayload } from './auth.payload';
 
 @Injectable()
 export class AuthService {
@@ -16,17 +17,31 @@ export class AuthService {
               private readonly jwtService: JwtService,
   ){}
   
-  async  login(credentials:LoginDto) {
+  async  login(credentials:LoginDto){
     try {
       const user = await  this.userRepo.createQueryBuilder('user')
+                                        .addSelect('user.password')
                                         .where('user.email = :email',{email:credentials.email})
                                         .getOne()
-      const isValid = await user.comparePassword(credentials.password)
-      if (!isValid) {
+      if(!user) {
         throw new UnauthorizedException('Invalid Credentials')
-      }
-      return user
+      } 
+
+      const isValid = await user.comparePassword(credentials.password, user.password)
       
+      if (isValid){
+
+        const token = this.jwtService.signAsync({
+          id:user.id,
+          email:user.email
+        })
+
+        delete user.password
+        return {token, user}
+          
+      } else {
+       throw new UnauthorizedException('Email or Password incorrect')
+      }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
@@ -40,12 +55,17 @@ export class AuthService {
 
     if (existingUser){
       throw new BadRequestException('Email has already been taken.')
-    } else {
-      const user = await this.userRepo.create(credentials)
-      await this.userRepo.save(user)
-      const payload = {firstname:user.firstname}
-      return user
-    }
+    } 
+    const user = await this.userRepo.create(credentials)
+
+    await this.userRepo.save(user)
+
+    const payload = {id:user.id}
+
+    const token = this.jwtService.signAsync(payload)
+
+    return user
+    
   }
    
 

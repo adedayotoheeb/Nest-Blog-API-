@@ -34,7 +34,7 @@ export class User {
         this.password = await argon.hash(this.password);
     }
 
-    async comparePassword(attempt:string){
-            return await argon.verify(this.password, attempt)
+    async comparePassword(attempt:string, userpassword:string){
+            return await argon.verify(userpassword, attempt)
         }
 }

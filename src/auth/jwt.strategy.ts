@@ -7,8 +7,7 @@ import { ExtractJwt, Strategy, VerifiedCallback } from "passport-jwt";
 import { Repository } from "typeorm";
 import { AuthPayload } from "./auth.payload";
 import { User } from "./entities/user.entity";
-
-
+ 
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy){
@@ -18,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy){
         ){
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretKey:configModule.get('JWT_SECRET'),
+            secretOrKey:configModule.get('JWT_SECRET'),
             ignoreExpiration: false,
         });
     }
