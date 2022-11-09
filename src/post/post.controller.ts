@@ -1,4 +1,4 @@
-import { Controller, Query , Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Req } from '@nestjs/common';
+import { Controller, UseGuards, Query , Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Req } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -9,6 +9,7 @@ import { PostDto } from './dto/post.dto';
 import { Request } from 'express';
 import {  SortEnum } from './dto/sort.enum';
 import { PostFilter } from './dto/post.filter';
+import { AuthGuard } from '@nestjs/passport';
 
 
 @Controller('post')
@@ -22,7 +23,7 @@ export class PostController {
   }
 
   @Get()
-  // @UseInterceptors( new SerializeInterceptors(PostDto))
+  @UseGuards(AuthGuard('jwt'))
   findAll(@Query()query:PostFilter) {
     return this.postService.findAll(query);
   }

@@ -1,31 +1,29 @@
-import { Body, Controller, Res } from '@nestjs/common';
-import { Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Res, UseInterceptors, Req} from '@nestjs/common';
+import { Post, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 @Controller('auth')
+@UseInterceptors(ClassSerializerInterceptor)
 export class AuthController {
     constructor (private readonly authservice: AuthService){}
 
-    
-    @Post('/login')
-    async login(@Body() credentials:LoginDto, @Res() res: Response) {
-       const {token, user} =  await  this.authservice.login(credentials)
-       res.cookie('IsAuthenticated', true, {maxAge:2*60*1000})
-       res.cookie('Authenticated', token, {
-        httpOnly: true,
-        maxAge:2*60*1000,
-       })
-
-       return res.send({success:true, user})
+    @Post('login')
+    async login(@Body() credentials:LoginDto, @Res({passthrough:true}) res: Response) {
+      return await this.authservice.login(credentials, res)
     }
 
-    @Post('/register')
-    async register(@Body() body:RegisterUserDto){
-        this.authservice.register(body)
+    @Post('register')
+    async register(@Body() credentials:RegisterUserDto){
+        return await this.authservice.register(credentials)
+    }
+
+    @Get('signout')
+    async signOut(res:Response){
+      return await this.authservice.signOut(res)
     }
 
 }

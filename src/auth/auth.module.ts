@@ -15,7 +15,7 @@ import { JwtStrategy } from './jwt.strategy';
     useFactory: () => ({
       secret:process.env.JWT_SECRET,
       signOptions:{
-        algorithms:process.env.ALGORITHM_TYPE,
+        // algorithms:process.env.ALGORITHM_TYPE,
         expiresIn:process.env.EXPIRING_PERIOD,
     },
     }

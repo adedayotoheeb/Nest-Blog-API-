@@ -13,21 +13,6 @@
             ],
             "type": "node"
         },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Nest Debug",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}\\src\\main.ts",
-            "console": "integratedTerminal",
-            "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ],
-            "port":9000,
-            "autoAttachChildProcesses": true
-        }
+      
     ]
 }

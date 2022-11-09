@@ -30,11 +30,11 @@ export class User {
     
 
     @BeforeInsert()
-    async hashPassword(){
+    async hashPassword():Promise<void>{
         this.password = await argon.hash(this.password);
     }
 
-    async comparePassword(attempt:string, userpassword:string){
+    async comparePassword(attempt:string, userpassword:string):Promise<boolean>{
             return await argon.verify(userpassword, attempt)
         }
 }
