@@ -1,0 +1,21 @@
+name: Blog API Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    
+
+jobs:
+  custom_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Starting Ci/CD 
+        run: echo "Welcome to my first pipeline"
+      
+      
+
+    
+
+
