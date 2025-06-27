@@ -11,10 +11,31 @@ jobs:
   custom_build:
     runs-on: ubuntu-latest
     steps:
-      - name: Starting Ci/CD 
+      - name: Starting Ci/CD Pipeline
         run: echo "Welcome to my first pipeline"
+
+      - name: Download Code from Repository
+        uses: actions/checkout@v4
+
+      - name: Download Node
+        uses: actions/setup-node@v4
+        with: 
+          node-version: 22
+          
+      - name: Install Dependencies
+        run: node ci
+
+  test_build:
+    needs: custom_build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking if the build was successful
+        run: |
+          ls - 
+          echo "The build phase is successful"
       
       
+
 
     
 
