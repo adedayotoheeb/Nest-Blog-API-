@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Checking if the build was successful
         run: |
-          ls - 
+          ls 
           echo "The build phase is successful"
       
       
