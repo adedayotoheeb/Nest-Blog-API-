@@ -5,14 +5,17 @@ on:
   push:
     branches:
       - master
-    
-
+# job level environmental variables    
+env:
+  NAME: JELLO
+  PASSWORD: IAMHADES
+  
 jobs:
   custom_build:
     runs-on: ubuntu-latest
     steps:
       - name: Starting Ci/CD Pipeline
-        run: echo "Welcome to my first pipeline"
+        run:  echo "Welcome to my first pipeline"
 
       - name: Download Code from Repository
         uses: actions/checkout@v4
@@ -31,8 +34,9 @@ jobs:
     steps:
       - name: Checking if the build was successful
         run: |
-          ls 
+          ls -a
           echo "The build phase is successful"
+          echo $NAME  $PASSWORD
       
       
 
