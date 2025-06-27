@@ -21,9 +21,9 @@ jobs:
         uses: actions/setup-node@v4
         with: 
           node-version: 22
-          
+
       - name: Install Dependencies
-        run: node ci
+        run: npm ci
 
   test_build:
     needs: custom_build
