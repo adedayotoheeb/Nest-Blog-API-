@@ -39,7 +39,7 @@ jobs:
         run: |
           echo "The build phase is successful"
           echo ${{vars.NAME}}  
-          echo ${{secrets.PASWORD}}
+          echo ${{secrets.PASSWORD}}
           echo ${{toJson(github)}}
       
       
