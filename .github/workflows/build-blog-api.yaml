@@ -12,6 +12,9 @@ env:
   
 jobs:
   custom_build:
+    concurrency: 
+      group: producton-deployment
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - name: Starting Ci/CD Pipeline
@@ -34,10 +37,10 @@ jobs:
     steps:
       - name: Checking if the build was successful
         run: |
-          ls -a
           echo "The build phase is successful"
-          echo ${{vars.NAME}}  ${{secrets.PASWORD}}
-          echo ${{github}}
+          echo ${{vars.NAME}}  
+          echo ${{secrets.PASWORD}}
+          echo ${{toJson(github)}}
       
       
 
