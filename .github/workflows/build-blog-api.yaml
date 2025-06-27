@@ -36,7 +36,8 @@ jobs:
         run: |
           ls -a
           echo "The build phase is successful"
-          echo $NAME  $PASSWORD
+          echo ${{vars.NAME}}  ${{secrets.PASWORD}}
+          echo ${{github}}
       
       
 
