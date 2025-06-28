@@ -5,6 +5,12 @@ on:
   push:
     branches:
       - master
+#Job workflow level concurrency: 
+#cancel-in-progress to false means it shouldnt cancel the workflow 
+#it will only pause the until the other workflow is finished running
+concurrency: 
+      group: producton-deployment
+      cancel-in-progress: false
 # job level environmental variables    
 env:
   NAME: JELLO
@@ -12,9 +18,15 @@ env:
   
 jobs:
   custom_build:
+    if: github.ref == 'refs/heads/main'
+    #Job level concurrency
     concurrency: 
       group: producton-deployment
-      cancel-in-progress: true
+      cancel-in-progress: false
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        
     runs-on: ubuntu-latest
     steps:
       - name: Starting Ci/CD Pipeline
@@ -28,6 +40,17 @@ jobs:
         with: 
           node-version: 22
 
+      - name: Cahing Dependencies
+        uses: actions/cache@v4
+        with:
+          path: '~/.npm'
+          key: "${{runner.os}}-node-modules-${{hashFiles('package-lock.json')}}"
+        continue-on-error: true
+
+      #- name: Check package-lock-json hasn't changed
+        #id: check-cache
+        #run: echo "hash=${{ hashFiles('package-lock.json') }}" >> $GITHUB_OUTPUT
+          
       - name: Install Dependencies
         run: npm ci
 
@@ -38,9 +61,12 @@ jobs:
       - name: Checking if the build was successful
         run: |
           echo "The build phase is successful"
-          echo ${{vars.NAME}}  
-          echo ${{secrets.PASSWORD}}
-          echo ${{toJson(github)}}
+          echo ${{vars.NAME}} 
+
+      - name: Logging the github error
+        run: ls -
+        continue-on-error: true
+          
       
       
 
