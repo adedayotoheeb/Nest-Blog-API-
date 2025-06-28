@@ -8,9 +8,9 @@ on:
 #Job workflow level concurrency: 
 #cancel-in-progress to false means it shouldnt cancel the workflow 
 #it will only pause the until the other workflow is finished running
-# concurrency: 
-#       group: producton-deployment
-#       cancel-in-progress: false
+concurrency: 
+      group: producton-deployment
+      cancel-in-progress: false
 # job level environmental variables    
 env:
   NAME: JELLO
@@ -20,9 +20,9 @@ jobs:
   custom_build:
     # if: github.ref == 'refs/heads/main'
     #Job level concurrency
-    # concurrency: 
-    #   group: producton-deployment
-    #   cancel-in-progress: false
+    concurrency: 
+      group: producton-deployment
+      cancel-in-progress: false
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
